@@ -42,7 +42,7 @@ export default function Home() {
       </div>
 
       <div style={{ display:'flex', justifyContent:'center', borderBottom:'0.5px solid rgba(0,0,0,0.08)', background:'#fff' }}>
-        {[['30%','신입사원이 원하던 삶이 아니다'],['#1','도전을 막는 이유 경제적 어려움'],['264조','글로벌 IP 시장 규모']].map(([num,label],i) => (
+        {[['1,621만명','비경제활동인구'],['#1','도전을 막는 이유 경제적 어려움'],['264조','글로벌 IP 시장 규모']].map(([num,label],i) => (
           <div key={i} style={{ flex:1, maxWidth:280, padding:'28px 20px', textAlign:'center', borderRight: i<2 ? '0.5px solid rgba(0,0,0,0.08)' : 'none' }}>
             <div style={{ fontFamily:'Noto Serif KR, serif', fontSize:32, color:'#1c1c1a', marginBottom:6 }}>{num}</div>
             <div style={{ fontSize:12, color:'#888780', lineHeight:1.5 }}>{label}</div>
