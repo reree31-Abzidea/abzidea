@@ -135,7 +135,7 @@ export default function Invest() {
           <div style={{ fontSize:11, fontWeight:600, color:'#1D9E75', letterSpacing:2, textTransform:'uppercase', marginBottom:10 }}>Community Vote</div>
           <div style={{ fontFamily:'Noto Serif KR, serif', fontSize:28, marginBottom:8 }}>판매자 투표로 스타트업을 선정합니다</div>
           <div style={{ fontSize:14, color:'#888780', fontWeight:300, marginBottom:8, lineHeight:1.7 }}>
-            목표 달성 후 선순환 멤버 판매자들이 직접 투표로 투자할 스타트업을 결정합니다.
+            목표 달성 후 Abzidea파트너들이 직접 투표로 투자할 스타트업을 결정합니다.
           </div>
           <div style={{ background:'#FAEEDA', borderRadius:12, padding:'14px 18px', marginBottom:28, border:'0.5px solid rgba(186,117,23,0.2)', display:'flex', alignItems:'center', gap:12 }}>
             <span style={{ fontSize:18 }}>⏳</span>
@@ -175,7 +175,7 @@ export default function Invest() {
             ))}
           </div>
           <div style={{ marginTop:16, fontSize:12, color:'#888780', textAlign:'center' }}>
-            * 투표는 선순환 멤버 판매자만 참여 가능합니다 · 1인 1표
+            * 투표는 1인 1표로 진행합니다
           </div>
         </div>
       </div>
@@ -199,7 +199,7 @@ export default function Invest() {
             <div style={{ fontSize:13, fontWeight:500 }}>수수료 배분 구조</div>
             <span style={{ fontSize:11, background:'#E1F5EE', color:'#085041', padding:'3px 10px', borderRadius:100, fontWeight:500 }}>선순환 멤버 기준</span>
           </div>
-          <div style={{ fontSize:12, color:'#888780', marginBottom:16 }}>일반 판매자는 수익의 <strong style={{ color:'#1c1c1a' }}>80%</strong>를 수령합니다. 선순환 멤버는 10%를 투자펀드에 적립하고 투자 수익을 돌려받습니다.</div>
+          <div style={{ fontSize:12, color:'#888780', marginBottom:16 }}></div>
           {[['선순환 멤버 수령','#1c1c1a',70],['플랫폼 운영비','#BA7517',20],['투자펀드 적립','#1D9E75',10]].map(([label,color,pct]) => (
             <div key={label} style={{ display:'flex', alignItems:'center', gap:0, marginBottom:12 }}>
               <div style={{ fontSize:12, color:'#888780', width:140, flexShrink:0 }}>{label}</div>
