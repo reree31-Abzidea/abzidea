@@ -195,10 +195,14 @@ export default function Invest() {
           ))}
         </div>
         <div style={{ background:'#fff', borderRadius:14, border:'0.5px solid rgba(0,0,0,0.08)', padding:22 }}>
-          <div style={{ fontSize:13, fontWeight:500, marginBottom:16 }}>수수료 배분 구조</div>
-          {[['판매자 수령','#1c1c1a',80],['플랫폼 운영비','#BA7517',10],['투자펀드 적립','#1D9E75',10]].map(([label,color,pct]) => (
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:6 }}>
+            <div style={{ fontSize:13, fontWeight:500 }}>수수료 배분 구조</div>
+            <span style={{ fontSize:11, background:'#E1F5EE', color:'#085041', padding:'3px 10px', borderRadius:100, fontWeight:500 }}>선순환 멤버 기준</span>
+          </div>
+          <div style={{ fontSize:12, color:'#888780', marginBottom:16 }}>일반 판매자는 수익의 <strong style={{ color:'#1c1c1a' }}>80%</strong>를 수령합니다. 선순환 멤버는 10%를 투자펀드에 적립하고 투자 수익을 돌려받습니다.</div>
+          {[['선순환 멤버 수령','#1c1c1a',70],['플랫폼 운영비','#BA7517',20],['투자펀드 적립','#1D9E75',10]].map(([label,color,pct]) => (
             <div key={label} style={{ display:'flex', alignItems:'center', gap:0, marginBottom:12 }}>
-              <div style={{ fontSize:12, color:'#888780', width:120, flexShrink:0 }}>{label}</div>
+              <div style={{ fontSize:12, color:'#888780', width:140, flexShrink:0 }}>{label}</div>
               <div style={{ flex:1, height:8, background:'#f7f6f2', borderRadius:100, overflow:'hidden', margin:'0 12px' }}>
                 <div style={{ height:'100%', borderRadius:100, background:color, width:`${pct}%` }}></div>
               </div>
