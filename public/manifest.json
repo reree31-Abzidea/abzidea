@@ -1,0 +1,24 @@
+{
+  "name": "Abzidea — 당신의 아이디어가 당신의 미래입니다",
+  "short_name": "Abzidea",
+  "description": "아이디어 기반 선순환 커뮤니티 투자 플랫폼",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f6f2",
+  "theme_color": "#1D9E75",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
