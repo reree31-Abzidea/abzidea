@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function Register() {
@@ -10,6 +10,11 @@ export default function Register() {
   const [summary, setSummary] = useState('')
   const [price, setPrice] = useState('')
   const [derivToggle, setDerivToggle] = useState(false)
+  const [images, setImages] = useState([])         // 이미지 미리보기 URL 배열
+  const [attachments, setAttachments] = useState([]) // 첨부 파일 목록
+  const [story, setStory] = useState('')            // 아이디어 배경 스토리
+  const imageInputRef = useRef()
+  const fileInputRef = useRef()
 
   const cats = [
     { icon:'💼', name:'비즈니스·사업' },
@@ -34,6 +39,46 @@ export default function Register() {
   const numPrice = parseInt(price.replace(/[^0-9]/g,'')) || 0
   const sellerNet = Math.round(numPrice * 0.7)
 
+  // 이미지 추가 핸들러
+  const handleImageAdd = (e) => {
+    const files = Array.from(e.target.files)
+    if (images.length + files.length > 5) {
+      alert('이미지는 최대 5장까지 등록할 수 있어요.')
+      return
+    }
+    files.forEach(file => {
+      const url = URL.createObjectURL(file)
+      setImages(prev => [...prev, url])
+    })
+  }
+
+  // 이미지 삭제 핸들러
+  const handleImageRemove = (idx) => {
+    setImages(prev => prev.filter((_, i) => i !== idx))
+  }
+
+  // 파일 첨부 핸들러
+  const handleFileAdd = (e) => {
+    const files = Array.from(e.target.files)
+    if (attachments.length + files.length > 3) {
+      alert('파일은 최대 3개까지 첨부할 수 있어요.')
+      return
+    }
+    setAttachments(prev => [...prev, ...files])
+  }
+
+  // 파일 삭제 핸들러
+  const handleFileRemove = (idx) => {
+    setAttachments(prev => prev.filter((_, i) => i !== idx))
+  }
+
+  // 파일 크기 포맷
+  const formatSize = (bytes) => {
+    if (bytes < 1024) return bytes + 'B'
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + 'KB'
+    return (bytes / (1024 * 1024)).toFixed(1) + 'MB'
+  }
+
   return (
     <div style={{ background:'#f7f6f2', minHeight:'100vh' }}>
       <div style={{ background:'#fff', borderBottom:'0.5px solid rgba(0,0,0,0.08)', padding:'28px 40px' }}>
@@ -56,6 +101,32 @@ export default function Register() {
             </div>
           </div>
 
+          {/* ✅ 새로 추가: 이미지 등록 섹션 */}
+          <div style={{ background:'#fff', borderRadius:16, border:'0.5px solid rgba(0,0,0,0.08)', padding:24, marginBottom:16 }}>
+            <div style={{ fontSize:15, fontWeight:500, marginBottom:6 }}>🖼️ 아이디어 이미지</div>
+            <div style={{ fontSize:12, color:'#888780', marginBottom:16 }}>아이디어를 시각적으로 보여주세요. 최대 5장 · 첫 번째 이미지가 대표 이미지가 됩니다.</div>
+
+            {/* 이미지 그리드 (인스타그램 스타일) */}
+            <div style={{ display:'grid', gridTemplateColumns:'repeat(5,1fr)', gap:8 }}>
+              {images.map((url, idx) => (
+                <div key={idx} style={{ position:'relative', aspectRatio:'1', borderRadius:10, overflow:'hidden', border:'0.5px solid rgba(0,0,0,0.08)' }}>
+                  <img src={url} alt="" style={{ width:'100%', height:'100%', objectFit:'cover' }} />
+                  {idx === 0 && (
+                    <div style={{ position:'absolute', top:5, left:5, background:'#1D9E75', color:'#fff', fontSize:9, fontWeight:600, padding:'2px 7px', borderRadius:100 }}>대표</div>
+                  )}
+                  <button onClick={() => handleImageRemove(idx)} style={{ position:'absolute', top:5, right:5, width:20, height:20, borderRadius:'50%', background:'rgba(0,0,0,0.55)', color:'#fff', border:'none', cursor:'pointer', fontSize:12, display:'flex', alignItems:'center', justifyContent:'center', lineHeight:1 }}>×</button>
+                </div>
+              ))}
+              {images.length < 5 && (
+                <div onClick={() => imageInputRef.current.click()} style={{ aspectRatio:'1', borderRadius:10, border:'1.5px dashed rgba(0,0,0,0.15)', display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', cursor:'pointer', background:'#f7f6f2', gap:6 }}>
+                  <div style={{ fontSize:22, color:'#888780' }}>+</div>
+                  <div style={{ fontSize:10, color:'#888780' }}>이미지 추가</div>
+                </div>
+              )}
+            </div>
+            <input ref={imageInputRef} type="file" accept="image/*" multiple style={{ display:'none' }} onChange={handleImageAdd} />
+          </div>
+
           {/* 기본 정보 */}
           <div style={{ background:'#fff', borderRadius:16, border:'0.5px solid rgba(0,0,0,0.08)', padding:24, marginBottom:16 }}>
             <div style={{ fontSize:15, fontWeight:500, marginBottom:16 }}>✏️ 기본 정보</div>
@@ -69,6 +140,28 @@ export default function Register() {
                 <div style={{ fontSize:12, color:'#888780', marginTop:5 }}>{field.hint}</div>
               </div>
             ))}
+
+            {/* ✅ 새로 추가: 아이디어 배경 스토리 */}
+            <div style={{ marginBottom:16 }}>
+              <div style={{ fontSize:13, fontWeight:500, marginBottom:7 }}>
+                💬 이 아이디어의 배경 스토리 <span style={{ color:'#E24B4A', fontSize:11 }}>필수</span>
+              </div>
+              <div style={{ background:'#E1F5EE', borderRadius:10, padding:'10px 14px', marginBottom:8, fontSize:12, color:'#085041', lineHeight:1.6 }}>
+                ✨ 어떤 경험이나 불편함에서 이 아이디어가 나왔나요? 구매자는 숫자보다 <strong>당신의 진짜 이야기</strong>에 먼저 마음을 열어요.
+              </div>
+              <textarea
+                value={story}
+                onChange={e => setStory(e.target.value)}
+                placeholder="예: 직접 취업 준비를 하면서 공백기간 동안 수입이 없어 막막했던 경험이 있었어요. 그때 내 아이디어가 돈이 될 수 있다면 얼마나 좋을까 생각했고..."
+                style={{ width:'100%', padding:'11px 14px', border: story.length > 0 && story.length < 50 ? '0.5px solid #E24B4A' : '0.5px solid rgba(0,0,0,0.08)', borderRadius:10, fontSize:14, outline:'none', fontFamily:'inherit', resize:'vertical', minHeight:110, lineHeight:1.6 }}
+              />
+              <div style={{ display:'flex', justifyContent:'space-between', marginTop:5 }}>
+                <div style={{ fontSize:12, color: story.length < 50 ? '#E24B4A' : '#888780' }}>
+                  {story.length < 50 ? `최소 50자 이상 입력해주세요 (${story.length}자)` : `🌱 씨앗 단계에서 무료 공개됩니다 (${story.length}자)`}
+                </div>
+              </div>
+            </div>
+
             <div style={{ marginBottom:16 }}>
               <div style={{ fontSize:13, fontWeight:500, marginBottom:7 }}>문제 인식 <span style={{ color:'#E24B4A', fontSize:11 }}>필수</span></div>
               <textarea placeholder="어떤 문제를 발견했나요?" style={{ width:'100%', padding:'11px 14px', border:'0.5px solid rgba(0,0,0,0.08)', borderRadius:10, fontSize:14, outline:'none', fontFamily:'inherit', resize:'vertical', minHeight:90 }} />
@@ -84,6 +177,40 @@ export default function Register() {
               <textarea placeholder="구체적인 실행 방법, 수치, 검증 내용 등 완성된 내용을 작성해주세요." style={{ width:'100%', padding:'11px 14px', border:'0.5px solid rgba(0,0,0,0.08)', borderRadius:10, fontSize:14, outline:'none', fontFamily:'inherit', resize:'vertical', minHeight:120 }} />
               <div style={{ fontSize:12, color:'#888780', marginTop:5 }}>🌳 나무 단계에서 구매 후 공개</div>
             </div>
+          </div>
+
+          {/* ✅ 새로 추가: 파일 첨부 섹션 */}
+          <div style={{ background:'#fff', borderRadius:16, border:'0.5px solid rgba(0,0,0,0.08)', padding:24, marginBottom:16 }}>
+            <div style={{ fontSize:15, fontWeight:500, marginBottom:6 }}>📎 파일 첨부</div>
+            <div style={{ fontSize:12, color:'#888780', marginBottom:16 }}>관련 자료, 기획서, 데이터 등을 첨부하세요. 최대 3개 · PDF, PPT, Excel, Word 등 지원</div>
+
+            {attachments.length > 0 && (
+              <div style={{ marginBottom:12 }}>
+                {attachments.map((file, idx) => (
+                  <div key={idx} style={{ display:'flex', alignItems:'center', justifyContent:'space-between', padding:'10px 14px', background:'#f7f6f2', borderRadius:10, marginBottom:8, border:'0.5px solid rgba(0,0,0,0.08)' }}>
+                    <div style={{ display:'flex', alignItems:'center', gap:10 }}>
+                      <div style={{ fontSize:20 }}>
+                        {file.name.endsWith('.pdf') ? '📄' : file.name.endsWith('.pptx') || file.name.endsWith('.ppt') ? '📊' : file.name.endsWith('.xlsx') || file.name.endsWith('.xls') ? '📈' : '📁'}
+                      </div>
+                      <div>
+                        <div style={{ fontSize:13, fontWeight:500, color:'#1c1c1a' }}>{file.name}</div>
+                        <div style={{ fontSize:11, color:'#888780' }}>{formatSize(file.size)}</div>
+                      </div>
+                    </div>
+                    <button onClick={() => handleFileRemove(idx)} style={{ background:'none', border:'none', cursor:'pointer', color:'#888780', fontSize:16, padding:'4px 8px' }}>×</button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {attachments.length < 3 && (
+              <div onClick={() => fileInputRef.current.click()} style={{ border:'1.5px dashed rgba(0,0,0,0.15)', borderRadius:12, padding:'20px', textAlign:'center', cursor:'pointer', background:'#f7f6f2' }}>
+                <div style={{ fontSize:24, marginBottom:6 }}>📎</div>
+                <div style={{ fontSize:13, color:'#888780' }}>클릭하여 파일 첨부</div>
+                <div style={{ fontSize:11, color:'#aaa', marginTop:4 }}>PDF, PPT, Excel, Word · 파일당 최대 50MB</div>
+              </div>
+            )}
+            <input ref={fileInputRef} type="file" multiple accept=".pdf,.ppt,.pptx,.xls,.xlsx,.doc,.docx,.hwp,.zip" style={{ display:'none' }} onChange={handleFileAdd} />
           </div>
 
           {/* 레벨 선택 */}
@@ -157,13 +284,37 @@ export default function Register() {
         <div>
           <div style={{ background:'#fff', borderRadius:16, border:'0.5px solid rgba(0,0,0,0.08)', padding:20, marginBottom:14 }}>
             <div style={{ fontSize:13, fontWeight:500, marginBottom:14, paddingBottom:10, borderBottom:'0.5px solid rgba(0,0,0,0.08)' }}>📋 등록 체크리스트</div>
-            {[['카테고리 선택', !!cat],['아이디어 제목', !!title],['한 줄 요약', !!summary],['레벨 선택', true],['판매 방식', true],['가격 설정', !!price]].map(([label, done]) => (
+            {[
+              ['카테고리 선택', !!cat],
+              ['아이디어 제목', !!title],
+              ['한 줄 요약', !!summary],
+              ['배경 스토리 (50자+)', story.length >= 50],
+              ['레벨 선택', true],
+              ['판매 방식', true],
+              ['가격 설정', !!price],
+            ].map(([label, done]) => (
               <div key={label} style={{ display:'flex', alignItems:'center', gap:8, fontSize:13, marginBottom:8 }}>
                 <div style={{ width:18, height:18, borderRadius:'50%', background: done ? '#E1F5EE' : '#f7f6f2', color: done ? '#1D9E75' : '#888780', display:'flex', alignItems:'center', justifyContent:'center', fontSize:10, border: done ? 'none' : '0.5px solid rgba(0,0,0,0.08)' }}>{done ? '✓' : '○'}</div>
                 <span style={{ color: done ? '#1c1c1a' : '#888780' }}>{label}</span>
               </div>
             ))}
           </div>
+
+          {/* 이미지 미리보기 (등록된 경우) */}
+          {images.length > 0 && (
+            <div style={{ background:'#fff', borderRadius:16, border:'0.5px solid rgba(0,0,0,0.08)', padding:20, marginBottom:14 }}>
+              <div style={{ fontSize:13, fontWeight:500, marginBottom:12 }}>🖼️ 이미지 미리보기</div>
+              <img src={images[0]} alt="대표 이미지" style={{ width:'100%', borderRadius:10, objectFit:'cover', aspectRatio:'1' }} />
+              {images.length > 1 && (
+                <div style={{ display:'grid', gridTemplateColumns:'repeat(4,1fr)', gap:5, marginTop:5 }}>
+                  {images.slice(1).map((url, idx) => (
+                    <img key={idx} src={url} alt="" style={{ width:'100%', borderRadius:6, objectFit:'cover', aspectRatio:'1' }} />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           <div style={{ background:'#fff', borderRadius:16, border:'0.5px solid rgba(0,0,0,0.08)', padding:20, position:'sticky', top:80 }}>
             <div style={{ fontSize:13, fontWeight:500, marginBottom:12 }}>👀 미리보기</div>
             <div style={{ background:'#f7f6f2', borderRadius:12, padding:16 }}>
